@@ -19,8 +19,6 @@ class EmployeePosition extends Model
     ];
 
     protected $casts = [
-        'min_salary' => 'decimal:2',
-        'max_salary' => 'decimal:2',
         'is_active' => 'boolean',
     ];
 
