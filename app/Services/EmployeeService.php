@@ -8,6 +8,7 @@ use App\Mail\NewEmployeeNotification;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Mail;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EmployeeService
 {
@@ -161,5 +162,66 @@ class EmployeeService
         return Employee::withoutSalaryChangeInMonths($months)
             ->with(['position', 'manager'])
             ->paginate($perPage);
+    }
+
+    /**
+     * Export all employee data to CSV format
+     */
+    public function exportToCsv(): StreamedResponse
+    {
+        $employees = Employee::with(['position', 'manager'])
+            ->withTrashed()
+            ->get();
+
+        $filename = 'employees_export_' . now()->format('Y_m_d_His') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ];
+
+        $callback = function () use ($employees) {
+            $file = fopen('php://output', 'w');
+
+            // CSV Headers
+            fputcsv($file, [
+                'ID',
+                'Name',
+                'Email',
+                'Salary',
+                'Position',
+                'Manager ID',
+                'Manager Name',
+                'Hire Date',
+                'Last Salary Change',
+                'Is Founder',
+                'Deleted At',
+                'Created At',
+                'Updated At'
+            ]);
+
+            // CSV Data
+            foreach ($employees as $employee) {
+                fputcsv($file, [
+                    $employee->id,
+                    $employee->name,
+                    $employee->email,
+                    number_format($employee->salary) . ' IQD',
+                    $employee->position?->title ?? '',
+                    $employee->manager_id ?? '',
+                    $employee->manager?->name ?? '',
+                    $employee->hire_date ? date('d/m/Y', strtotime($employee->hire_date)) : '',
+                    $employee->last_salary_change ? $employee->last_salary_change->format('d/m/Y h:i A') : '',
+                    $employee->is_founder ? '1' : '0',
+                    $employee->created_at->format('d/m/Y h:i A'),
+                    $employee->updated_at->format('d/m/Y h:i A'),
+                    $employee->deleted_at ? $employee->deleted_at->format('d/m/Y h:i A') : '',
+                ]);
+            }
+
+            fclose($file);
+        };
+
+        return response()->stream($callback, 200, $headers);
     }
 }

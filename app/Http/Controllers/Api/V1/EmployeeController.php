@@ -9,6 +9,7 @@ use App\Http\Requests\Api\V1\Employee\UpdateEmployeeRequest;
 use App\Models\Employee;
 use App\Services\EmployeeService;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EmployeeController extends Controller
 {
@@ -115,5 +116,13 @@ class EmployeeController extends Controller
         return response()->json([
             'data' => $employees
         ]);
+    }
+
+    /**
+     * Export all employee data to CSV
+     */
+    public function exportCsv(): StreamedResponse
+    {
+        return $this->employeeService->exportToCsv();
     }
 }
