@@ -8,6 +8,8 @@ use App\Mail\NewEmployeeNotification;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class EmployeeService
@@ -174,6 +176,15 @@ class EmployeeService
             ->get();
 
         $filename = 'employees_export_' . now()->format('Y_m_d_His') . '.csv';
+
+        // Log the export operation
+        Log::channel('employee')->info('Employee data exported to CSV', [
+            'user_id' => Auth::id(),
+            'user_name' => Auth::user()?->name ?? 'System',
+            'total_records' => $employees->count(),
+            'filename' => $filename,
+            'timestamp' => now()->toDateTimeString(),
+        ]);
 
         $headers = [
             'Content-Type' => 'text/csv',

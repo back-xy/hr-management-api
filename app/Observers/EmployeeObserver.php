@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\EmployeeLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Log;
 
 class EmployeeObserver
 {
@@ -54,6 +55,7 @@ class EmployeeObserver
             default => "{$userName} performed {$action} on employee {$employeeName}",
         };
 
+        // Database logging
         EmployeeLog::create([
             'employee_id' => $employee->id,
             'user_id' => Auth::id(),
@@ -63,6 +65,15 @@ class EmployeeObserver
             'ip_address' => Request::ip(),
             'user_agent' => Request::userAgent(),
             'description' => $description,
+        ]);
+
+        // File logging to employee.log
+        Log::channel('employee')->info($description, [
+            'employee_id' => $employee->id,
+            'user_id' => Auth::id(),
+            'action' => $action,
+            'ip_address' => Request::ip(),
+            'timestamp' => now()->toDateTimeString(),
         ]);
     }
 }
