@@ -22,6 +22,7 @@ class EmployeeSeeder extends Seeder
 
         // Create founder
         $founder = Employee::factory()->create([
+            'name' => 'Founder Employee',
             'salary' => fake()->numberBetween(3000, 5000) * 1000, // 3M-5M IQD
             'position_id' => fake()->randomElement($positionIds),
             'manager_id' => null,
@@ -31,7 +32,8 @@ class EmployeeSeeder extends Seeder
         ]);
 
         // Create managers reporting to founder
-        $managers = Employee::factory()->count(25)->create([
+        $managers = Employee::factory()->count(5)->create([
+            'name' => fn() => 'Manager ' . fake()->unique()->word(),
             'salary' => fn() => fake()->numberBetween(1500, 2500) * 1000, // 1.5M-2.5M IQD
             'position_id' => fn() => fake()->randomElement($positionIds),
             'manager_id' => $founder->id,
@@ -42,7 +44,7 @@ class EmployeeSeeder extends Seeder
         $allManagers = $managers->push($founder);
 
         // Create regular employees
-        Employee::factory()->count(500)->create([
+        Employee::factory()->count(50)->create([
             'position_id' => fn() => fake()->randomElement($positionIds),
             'manager_id' => fn() => $allManagers->random()->id,
         ]);

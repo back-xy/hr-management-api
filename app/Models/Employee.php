@@ -57,14 +57,6 @@ class Employee extends Model
     }
 
     /**
-     * Get all employee logs for this employee.
-     */
-    public function logs(): HasMany
-    {
-        return $this->hasMany(EmployeeLog::class);
-    }
-
-    /**
      * Get the hierarchy of managers up to the founder.
      */
     public function getManagerHierarchy(): array
@@ -77,7 +69,7 @@ class Employee extends Model
             $current = $current->manager;
         }
 
-        return $hierarchy;
+        return array_reverse($hierarchy);
     }
 
     /**
@@ -114,26 +106,18 @@ class Employee extends Model
     }
 
     /**
-     * Scope to search by name or salary.
-     */
-    public function scopeSearch($query, $name = null, $salary = null)
-    {
-        if ($name) {
-            $query->where('name', 'like', "%{$name}%");
-        }
-
-        if ($salary) {
-            $query->where('salary', $salary);
-        }
-
-        return $query;
-    }
-
-    /**
      * Get the founder of the company.
      */
     public static function founder()
     {
         return static::where('is_founder', true)->first();
+    }
+
+    /**
+     * Get all employee logs for this employee.
+     */
+    public function logs(): HasMany
+    {
+        return $this->hasMany(EmployeeLog::class);
     }
 }

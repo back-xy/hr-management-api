@@ -47,11 +47,8 @@ Route::prefix('v1')->group(function () {
             Route::delete('/{employee}', [EmployeeController::class, 'destroy']);
 
             // Hierarchy Routes
-            Route::get('/{employee}/hierarchy', [EmployeeController::class, 'getHierarchy']);
-            Route::get('/{employee}/hierarchy-with-salaries', [EmployeeController::class, 'getHierarchyWithSalaries']);
-
-            // Search Route
-            Route::get('/search', [EmployeeController::class, 'search']);
+            Route::get('/{employee}/hierarchy', [EmployeeController::class, 'getManagerialHierarchy']);
+            Route::get('/{employee}/hierarchy-with-salaries', [EmployeeController::class, 'getManagerialHierarchyWithSalaries']);
 
             // Export/Import Routes
             Route::get('/export/csv', [EmployeeController::class, 'exportCsv']);
@@ -59,7 +56,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/export/json', [EmployeeController::class, 'exportJson']);
 
             // Salary Change History
-            Route::get('/no-salary-change/{months}', [EmployeeController::class, 'employeesWithoutSalaryChange']);
+            Route::get('/without-salary-change/{months}', [EmployeeController::class, 'withoutSalaryChange']);
         });
 
         // Employee Position Routes
