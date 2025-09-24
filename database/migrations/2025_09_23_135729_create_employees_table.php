@@ -32,8 +32,15 @@ return new class extends Migration
             $table->index('last_salary_change');
         });
 
-        // Add unique constraint for the founder after table creation
+
+        // unique constraint for the founder
         DB::statement('CREATE UNIQUE INDEX unique_founder ON employees (is_founder) WHERE is_founder = true');
+        // non-founders must have a manager constraint
+        DB::statement('
+            ALTER TABLE employees 
+            ADD CONSTRAINT check_manager_required 
+            CHECK (is_founder = true OR manager_id IS NOT NULL)
+        ');
     }
 
     /**
