@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\EmployeeController;
-use App\Http\Controllers\Api\V1\PositionController;
+use App\Http\Controllers\Api\V1\EmployeePositionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,7 +62,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/no-salary-change/{months}', [EmployeeController::class, 'employeesWithoutSalaryChange']);
         });
 
-        // Position Routes
-        Route::apiResource('positions', PositionController::class);
+        // Employee Position Routes
+        Route::apiResource('employee-positions', EmployeePositionController::class);
     });
 });
