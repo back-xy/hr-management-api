@@ -3,8 +3,11 @@
 namespace App\Services;
 
 use App\Models\Employee;
+use App\Mail\SalaryChangeNotification;
+use App\Mail\NewEmployeeNotification;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Mail;
 
 class EmployeeService
 {
@@ -36,7 +39,6 @@ class EmployeeService
      */
     public function create(array $data): Employee
     {
-        // Set initial values
         $data['last_salary_change'] = now();
 
         $employee = Employee::create($data);
@@ -44,8 +46,9 @@ class EmployeeService
 
         // Send notification to manager
         if ($employee->manager) {
-            // TODO: Implement manager notification
-            // Mail::to($employee->manager->email)->send(new NewEmployeeNotification($employee));
+            Mail::to($employee->manager->email)->queue(
+                new NewEmployeeNotification($employee)
+            );
         }
 
         return $employee;
@@ -64,15 +67,48 @@ class EmployeeService
      */
     public function update(Employee $employee, array $data): Employee
     {
+        // Store the original salary for comparison
+        $originalSalary = $employee->salary;
+        $salaryChanged = false;
+
         $employee->fill($data);
 
         if ($employee->isDirty('salary')) {
+            $salaryChanged = true;
             $data['last_salary_change'] = now();
             $employee->last_salary_change = now();
         }
 
         $employee->save();
-        return $employee->fresh()->load(['position', 'manager']);
+        $employee->refresh();
+        $employee->load(['position', 'manager']);
+
+        // Send salary change email notifications if salary was updated
+        if ($salaryChanged) {
+            $this->sendSalaryChangeEmails($employee, $originalSalary, $employee->salary);
+        }
+
+        return $employee;
+    }
+
+    /**
+     * Send salary change email notifications
+     */
+    private function sendSalaryChangeEmails(Employee $employee, int $oldSalary, int $newSalary): void
+    {
+        // Send email to the employee about their salary change
+        Mail::to($employee->email)->queue(
+            new SalaryChangeNotification($employee, $oldSalary, $newSalary, true)
+        );
+
+        // Get the management hierarchy and send email to each manager
+        $managers = $employee->getManagerHierarchy();
+
+        foreach ($managers as $manager) {
+            Mail::to($manager->email)->queue(
+                new SalaryChangeNotification($employee, $oldSalary, $newSalary, false)
+            );
+        }
     }
 
     /**
