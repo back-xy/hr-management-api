@@ -12,7 +12,7 @@ class EmployeePositionService
     /**
      * Get paginated employee positions with employee count
      */
-    public function getPaginated(int $perPage = 25): LengthAwarePaginator
+    public function getPaginated(int $perPage = 15): LengthAwarePaginator
     {
         return EmployeePosition::withCount('employees')->latest()->paginate($perPage);
     }
