@@ -8,7 +8,7 @@ A Laravel-based API for comprehensive Human Resources Management System with hie
   - Complete CRUD operations with hierarchical relationships
   - Manager-employee hierarchy tracking
   - Employee search by name or salary
-  - CSV/JSON import and export functionality
+  - CSV/JSON export functionality (CSV import not implemented)
   - Salary change notifications and tracking
 - **Position Management**:
   - Job position CRUD operations
@@ -17,13 +17,13 @@ A Laravel-based API for comprehensive Human Resources Management System with hie
 - **Logging & Monitoring**:
   - Database logging for all employee operations
   - File logging with custom employee.log channel
-  - Action tracking with user details and IP addresses
+  - Action tracking with user details
 - **Data Management Commands**:
   - Delete old logs with configurable timeframe
-  - Remove all log files with dry-run option
+  - Remove all log files
   - Export database to SQL format
   - Export employees to JSON
-  - Bulk employee data seed with progress tracking
+  - Employee data seed with progress tracking
 - **Authentication**:
   - Token-based authentication using Laravel Sanctum
   - Rate limiting (10 requests per minute)
@@ -53,7 +53,6 @@ A Laravel-based API for comprehensive Human Resources Management System with hie
 
 ### Data Operations
 - `GET /employees/export/csv` - Export employees to CSV
-- `POST /employees/import/csv` - Import employees from CSV file
 - `GET /employees/no-salary-change/{months}` - Get employees without salary changes
 
 ## Setup Guide
