@@ -36,7 +36,7 @@ class EmployeePositionController extends Controller
         $position = $this->employeePositionService->create($request->validated());
 
         return response()->json([
-            'message' => 'Employee position created successfully',
+            'message' => 'Position created successfully',
             'data' => $position
         ], 201);
     }
@@ -61,7 +61,7 @@ class EmployeePositionController extends Controller
         $position = $this->employeePositionService->update($employeePosition, $request->validated());
 
         return response()->json([
-            'message' => 'Employee position updated successfully',
+            'message' => 'Position updated successfully',
             'data' => $position
         ]);
     }
@@ -74,7 +74,7 @@ class EmployeePositionController extends Controller
         $this->employeePositionService->delete($employeePosition);
 
         return response()->json([
-            'message' => 'Employee position deleted successfully'
+            'message' => 'Position deleted successfully'
         ]);
     }
 }
