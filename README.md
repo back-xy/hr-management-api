@@ -142,8 +142,12 @@ A complete database export with sample data is included at `database/dumps/hr_ma
 
 ## Documentation
 
-API documentation is available in the source code under `docs/hr-management-api.postman_collection`.
+API documentation is available in the source code under `docs/hr-management-api.postman_collection.json`.
 
 ## Testing
 
 Not Implemented
+
+## Project Notes
+
+Unfortunately, due to my time constraints, automated testing and employee CSV import were not implemented. All other required functionality is complete and documented.

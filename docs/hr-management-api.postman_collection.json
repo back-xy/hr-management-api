@@ -539,7 +539,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Alice Johnson\",\r\n    \"email\": \"alice.johnsson@company.com\",\r\n    \"salary\": 1200000,\r\n    \"position_id\": 1,\r\n    \"manager_id\": 2,\r\n    // \"is_founder\": true,\r\n    \"hire_date\": \"2024-01-15\",\r\n    \"phone\": \"+1-555-0123\",\r\n    \"address\": \"123 Oak Street, San Francisco, CA 94102\",\r\n    \"status\": \"active\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Alice Johnson\",\r\n    \"email\": \"alice.johnsson@company.com\",\r\n    \"salary\": 1200000,\r\n    \"position_id\": 1,\r\n    \"manager_id\": 2,\r\n    // \"is_founder\": true,\r\n    \"hire_date\": \"2024-01-15\",\r\n    \"phone\": \"+1-555-0123\",\r\n    \"address\": \"123 Oak Street, San Francisco, CA 94102\",\r\n    \"status\": \"active\" // active, inactive, terminated\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -753,7 +753,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\": \"Name Updated\"\r\n    // \"email\": \"john.smith.updated@company.com\",\r\n    // \"salary\": 8500200,\r\n    // \"position_id\": 3,\r\n    // \"manager_id\": 2,\r\n    // \"is_founder\": true,\r\n    // \"phone\": \"+1-555-0123\",\r\n    // \"address\": \"123 Main Street, New York, NY 10001\",\r\n    // \"status\": \"active\"\r\n}",
+							"raw": "{\r\n    \"name\": \"Name Updated\"\r\n    // \"email\": \"john.smith.updated@company.com\",\r\n    // \"salary\": 850000,\r\n    // \"position_id\": 3,\r\n    // \"manager_id\": 2,\r\n    // \"is_founder\": true,\r\n    // \"phone\": \"+1-555-0123\",\r\n    // \"address\": \"123 Main Street, New York, NY 10001\",\r\n    // \"status\": \"inactive\" // active, inactive, terminated\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2014,6 +2014,16 @@
 		{
 			"key": "access_token",
 			"value": ""
+		},
+		{
+			"key": "id",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "months",
+			"value": "",
+			"type": "default"
 		}
 	]
 }
