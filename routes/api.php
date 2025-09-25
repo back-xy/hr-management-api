@@ -52,8 +52,7 @@ Route::prefix('v1')->group(function () {
 
             // Export/Import Routes
             Route::get('/export/csv', [EmployeeController::class, 'exportCsv']);
-            Route::post('/import/csv', [EmployeeController::class, 'importCsv']);
-            Route::get('/export/json', [EmployeeController::class, 'exportJson']);
+            Route::post('/import/csv', [EmployeeController::class, 'importCsv']); // todo
 
             // Salary Change History
             Route::get('/without-salary-change/{months}', [EmployeeController::class, 'withoutSalaryChange']);
