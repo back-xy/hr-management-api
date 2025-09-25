@@ -43,6 +43,8 @@ This project is a Laravel-based API for comprehensive Human Resources Management
 - `DELETE /employees/{id}` - Delete employee
 - `GET /employees/{id}/hierarchy` - Get manager hierarchy (names only)
 - `GET /employees/{id}/hierarchy-with-salaries` - Get hierarchy with salary details
+- `GET /employees/no-salary-change/{months}` - Get employees without salary changes
+- `GET /employees/export/csv` - Export employees to CSV
 
 ### Position Operations
 - `GET /positions` - List all positions
@@ -51,9 +53,6 @@ This project is a Laravel-based API for comprehensive Human Resources Management
 - `PUT /positions/{id}` - Update position
 - `DELETE /positions/{id}` - Delete position
 
-### Data Operations
-- `GET /employees/export/csv` - Export employees to CSV
-- `GET /employees/no-salary-change/{months}` - Get employees without salary changes
 
 ## Artisan Commands
 
