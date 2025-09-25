@@ -1,0 +1,2019 @@
+{
+	"info": {
+		"_postman_id": "e6b33839-31d5-4d73-8e1f-789ef48b5a37",
+		"name": "HR Management API",
+		"description": "This project is a Laravel-based API for comprehensive Human Resources Management System with hierarchical employee structure, extensive logging, and data management.\n\n## Features\n\n- **Employee Management**:\n    - Complete CRUD operations with hierarchical relationships\n        \n    - Manager-employee hierarchy tracking\n        \n    - Employee search by name or salary\n        \n    - CSV/JSON export functionality (CSV import not implemented)\n        \n    - Salary change notifications and tracking\n        \n- **Position Management**:\n    - Job position CRUD operations\n        \n    - Salary range definitions\n        \n    - Active/inactive status management\n        \n- **Logging & Monitoring**:\n    - Database logging for all employee operations\n        \n    - File logging with custom employee.log channel\n        \n    - Mail logging for new employee and salary change notifications\n        \n    - Action tracking with user details\n        \n- **Data Management Commands**:\n    - Delete old logs with configurable timeframe\n        \n    - Remove all log files\n        \n    - Export database to SQL format\n        \n    - Export employees to JSON\n        \n    - Employee data seed with progress tracking\n        \n- **Authentication**:\n    - Token-based authentication using Laravel Sanctum\n        \n    - Rate limiting (10 requests per minute)\n        \n\n## API Endpoints\n\n### Authentication\n\n- `POST /auth/register` - Register new user account\n    \n- `POST /auth/login` - Get authentication token\n    \n- `POST /auth/logout` - Invalidate current token\n    \n\n### Employee Operations\n\n- `GET /employees` - List all employees (paginated, searchable)\n    \n- `POST /employees` - Create new employee\n    \n- `GET /employees/{id}` - Get employee details\n    \n- `PUT /employees/{id}` - Update employee information\n    \n- `DELETE /employees/{id}` - Delete employee\n    \n- `GET /employees/{id}/hierarchy` - Get manager hierarchy (names only)\n    \n- `GET /employees/{id}/hierarchy-with-salaries` - Get hierarchy with salary details\n    \n- `GET /employees/no-salary-change/{months}` - Get employees without salary changes\n    \n- `GET /employees/export/csv` - Export employees to CSV\n    \n\n### Position Operations\n\n- `GET /positions` - List all positions\n    \n- `POST /positions` - Create new position\n    \n- `GET /positions/{id}` - Get position details\n    \n- `PUT /positions/{id}` - Update position\n    \n- `DELETE /positions/{id}` - Delete position",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22389980",
+		"_collection_link": "https://my-team-9204.postman.co/workspace/HR-Management~5b3d130c-c741-42ba-bf6c-b2738a0ed042/collection/22389980-e6b33839-31d5-4d73-8e1f-789ef48b5a37?action=share&source=collection_link&creator=22389980"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code >= 200 && pm.response.code < 300) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    if (responseJson.data && responseJson.data.access_token) {\r",
+									"        pm.collectionVariables.set(\"access_token\", responseJson.data.access_token);\r",
+									"        console.log(\"Token:\", responseJson.data.access_token);\r",
+									"    }\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test User\",\r\n  \"email\": \"testuser@example.com\",\r\n  \"password\": \"password123\",\r\n  \"password_confirmation\": \"password123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Register Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Test User\",\r\n  \"email\": \"testuser@example.com\",\r\n  \"password\": \"password123\",\r\n  \"password_confirmation\": \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:16:12 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User registered successfully\",\n    \"data\": {\n        \"user\": {\n            \"name\": \"Test User\",\n            \"email\": \"testuser@example.com\",\n            \"updated_at\": \"2025-09-25T07:16:12.000000Z\",\n            \"created_at\": \"2025-09-25T07:16:12.000000Z\",\n            \"id\": 2\n        },\n        \"access_token\": \"1|LL7nypt3pj6gtdzjJueFMioKbmsTZA5yKytU7ej58c751ab8\",\n        \"token_type\": \"Bearer\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code >= 200 && pm.response.code < 300) {\r",
+									"    const responseJson = pm.response.json();\r",
+									"    if (responseJson.data && responseJson.data.access_token) {\r",
+									"        pm.collectionVariables.set(\"access_token\", responseJson.data.access_token);\r",
+									"        console.log(\"Token:\", responseJson.data.access_token);\r",
+									"    }\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Login Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"test@example.com\",\r\n  \"password\": \"password\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/auth/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:17:05 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Login successful\",\n    \"data\": {\n        \"user\": {\n            \"id\": 1,\n            \"name\": \"Test User\",\n            \"email\": \"test@example.com\",\n            \"email_verified_at\": \"2025-09-25T07:01:49.000000Z\",\n            \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n        },\n        \"access_token\": \"2|WKomyZaQadL7MrBVEjHPH1Vzbm6a5gRYZCvPWPGy98e8a8fc\",\n        \"token_type\": \"Bearer\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Logout Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/auth/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"auth",
+										"logout"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:16:46 GMT"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Logged out successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Employees",
+			"item": [
+				{
+					"name": "List With Filters",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Ena",
+									"description": "Filter employees by name",
+									"disabled": true
+								},
+								{
+									"key": "min_salary",
+									"value": "600000",
+									"description": "Minimum salary filter",
+									"disabled": true
+								},
+								{
+									"key": "max_salary",
+									"value": "900000",
+									"description": "Maximum salary filter",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "15",
+									"description": "Number of employees per page",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/employees",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "edna",
+											"description": "Filter employees by name",
+											"disabled": true
+										},
+										{
+											"key": "min_salary",
+											"value": "600000",
+											"description": "Minimum salary filter",
+											"disabled": true
+										},
+										{
+											"key": "max_salary",
+											"value": "900000",
+											"description": "Maximum salary filter",
+											"disabled": true
+										},
+										{
+											"key": "per_page",
+											"value": "15",
+											"description": "Number of employees per page",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:20:24 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "9"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"current_page\": 1,\n        \"data\": [\n            {\n                \"id\": 63,\n                \"name\": \"Guy Hilpert\",\n                \"email\": \"koss.marlee@example.org\",\n                \"salary\": 1867000,\n                \"position_id\": 20,\n                \"manager_id\": 8,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-04-09T00:00:00.000000Z\",\n                \"phone\": \"+1-720-653-3762\",\n                \"address\": \"961 Vidal Streets Suite 645\\nBartolettiton, CA 22132-1981\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-05-08T13:33:57.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 20,\n                    \"title\": \"Business Teacher\",\n                    \"description\": \"Quam ratione deserunt explicabo non suscipit eaque porro. Quia unde harum laborum porro ducimus ea.\",\n                    \"min_salary\": 2305000,\n                    \"max_salary\": 2506000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 8,\n                    \"name\": \"Cletus Roob\",\n                    \"email\": \"dooley.sterling@example.org\",\n                    \"salary\": 2281000,\n                    \"position_id\": 19,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2022-11-26T00:00:00.000000Z\",\n                    \"phone\": \"+19288893800\",\n                    \"address\": \"3035 Flavie Mountains\\nSchulistfort, TN 00695\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-03-25T17:01:45.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 64,\n                \"name\": \"Elissa Mante\",\n                \"email\": \"garrison07@example.com\",\n                \"salary\": 1329000,\n                \"position_id\": 24,\n                \"manager_id\": 50,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-04-13T00:00:00.000000Z\",\n                \"phone\": \"1-626-993-3234\",\n                \"address\": \"7823 Ankunding Divide\\nWest Blaise, RI 33474-3112\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-05-18T04:12:23.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 24,\n                    \"title\": \"Network Systems Analyst\",\n                    \"description\": \"Sint molestias est aut neque neque.\",\n                    \"min_salary\": 817000,\n                    \"max_salary\": 1116000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 50,\n                    \"name\": \"Kolby Lebsack\",\n                    \"email\": \"cristina21@example.net\",\n                    \"salary\": 705000,\n                    \"position_id\": 13,\n                    \"manager_id\": 5,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2024-08-17T00:00:00.000000Z\",\n                    \"phone\": \"+1.253.297.3511\",\n                    \"address\": \"68597 Hilario Drives Apt. 866\\nAbernathyshire, UT 71574\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-03-05T19:45:15.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 59,\n                \"name\": \"Dr. Earnestine Mitchell IV\",\n                \"email\": \"imani98@example.com\",\n                \"salary\": 1297000,\n                \"position_id\": 18,\n                \"manager_id\": 4,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-06-09T00:00:00.000000Z\",\n                \"phone\": \"+1.225.596.6708\",\n                \"address\": \"277 Devin Rapid\\nSawaynfurt, TX 25197-3147\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-05-28T18:25:35.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 18,\n                    \"title\": \"Nutritionist\",\n                    \"description\": \"Alias maiores optio veritatis beatae et.\",\n                    \"min_salary\": 659000,\n                    \"max_salary\": 1401000,\n                    \"is_active\": false,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 4,\n                    \"name\": \"Manager molestias\",\n                    \"email\": \"louisa66@example.net\",\n                    \"salary\": 2102000,\n                    \"position_id\": 23,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2021-03-23T00:00:00.000000Z\",\n                    \"phone\": \"+1 (279) 491-3772\",\n                    \"address\": \"681 Laurianne Street\\nLake Montana, LA 42008\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-04-07T11:58:23.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 62,\n                \"name\": \"Ena Lockman\",\n                \"email\": \"modesta89@example.com\",\n                \"salary\": 1805000,\n                \"position_id\": 1,\n                \"manager_id\": 15,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-03-04T00:00:00.000000Z\",\n                \"phone\": \"+1-929-261-7011\",\n                \"address\": \"18716 Gulgowski Manor Suite 015\\nLake Maevefurt, WA 66002-8697\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2024-12-20T23:23:43.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 1,\n                    \"title\": \"Central Office Operator\",\n                    \"description\": \"Repudiandae atque iure sed.\",\n                    \"min_salary\": 2065000,\n                    \"max_salary\": 2709000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 15,\n                    \"name\": \"Stella Haag\",\n                    \"email\": \"kara.runte@example.com\",\n                    \"salary\": 625000,\n                    \"position_id\": 14,\n                    \"manager_id\": 3,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2023-11-02T00:00:00.000000Z\",\n                    \"phone\": \"+1-251-505-4845\",\n                    \"address\": \"807 Rahul Estate Apt. 542\\nSouth Clairefurt, OH 85629\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2024-12-09T13:47:42.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 66,\n                \"name\": \"Prof. Jodie Heaney\",\n                \"email\": \"adolphus18@example.org\",\n                \"salary\": 668000,\n                \"position_id\": 2,\n                \"manager_id\": 41,\n                \"is_founder\": false,\n                \"hire_date\": \"2023-07-30T00:00:00.000000Z\",\n                \"phone\": \"1-520-930-5347\",\n                \"address\": \"4393 Becker Villages\\nMurphyfurt, OH 83258\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-02-12T21:46:01.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 2,\n                    \"title\": \"Airfield Operations Specialist\",\n                    \"description\": \"Qui fugit ducimus voluptas tempora.\",\n                    \"min_salary\": 1153000,\n                    \"max_salary\": 1846000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 41,\n                    \"name\": \"Rupert Walter\",\n                    \"email\": \"peggie.mraz@example.com\",\n                    \"salary\": 2371000,\n                    \"position_id\": 17,\n                    \"manager_id\": 4,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2024-06-27T00:00:00.000000Z\",\n                    \"phone\": \"(820) 887-2096\",\n                    \"address\": \"3184 Don Courts Apt. 030\\nAbshiremouth, MI 61836-7498\",\n                    \"status\": \"inactive\",\n                    \"last_salary_change\": \"2024-12-17T00:18:45.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 65,\n                \"name\": \"Lia Morissette\",\n                \"email\": \"lurline54@example.com\",\n                \"salary\": 1605000,\n                \"position_id\": 15,\n                \"manager_id\": 53,\n                \"is_founder\": false,\n                \"hire_date\": \"2022-12-15T00:00:00.000000Z\",\n                \"phone\": \"+1-424-455-1931\",\n                \"address\": \"64528 Vernice Views Suite 993\\nAdeliatown, NM 99007-8413\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-06-15T03:48:18.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 15,\n                    \"title\": \"Loan Counselor\",\n                    \"description\": \"Numquam quo alias rem expedita temporibus aut. Omnis tenetur voluptas nulla officia vitae qui.\",\n                    \"min_salary\": 1102000,\n                    \"max_salary\": 1387000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 53,\n                    \"name\": \"Michale Moen\",\n                    \"email\": \"maureen.mitchell@example.org\",\n                    \"salary\": 2363000,\n                    \"position_id\": 5,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2024-05-23T00:00:00.000000Z\",\n                    \"phone\": \"+16469996903\",\n                    \"address\": \"97475 Nader Pike Apt. 531\\nMohrborough, MS 64666-5514\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2024-12-17T21:35:25.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 57,\n                \"name\": \"Ms. Lexie Howell MD\",\n                \"email\": \"sven41@example.com\",\n                \"salary\": 1367000,\n                \"position_id\": 17,\n                \"manager_id\": 48,\n                \"is_founder\": false,\n                \"hire_date\": \"2024-06-02T00:00:00.000000Z\",\n                \"phone\": \"978.338.8669\",\n                \"address\": \"6454 Kozey Stravenue\\nWardshire, LA 09850\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-05-10T08:55:18.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 17,\n                    \"title\": \"Electric Motor Repairer\",\n                    \"description\": \"Nulla dolores perferendis eum sint.\",\n                    \"min_salary\": 1717000,\n                    \"max_salary\": 1926000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 48,\n                    \"name\": \"Daron Denesik\",\n                    \"email\": \"wayne79@example.net\",\n                    \"salary\": 1943000,\n                    \"position_id\": 7,\n                    \"manager_id\": 4,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2023-06-13T00:00:00.000000Z\",\n                    \"phone\": \"+1.854.634.3406\",\n                    \"address\": \"4778 Brisa Plaza Apt. 697\\nStiedemannview, NM 22259-6325\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2024-10-27T04:00:42.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 58,\n                \"name\": \"Sim Sanford\",\n                \"email\": \"ybode@example.com\",\n                \"salary\": 1703000,\n                \"position_id\": 9,\n                \"manager_id\": 10,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-04-24T00:00:00.000000Z\",\n                \"phone\": \"+1.603.216.4359\",\n                \"address\": \"5149 Domenic Wells\\nPort Margarete, SD 84177\",\n                \"status\": \"inactive\",\n                \"last_salary_change\": \"2025-09-06T18:14:51.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 9,\n                    \"title\": \"Mechanical Engineering Technician\",\n                    \"description\": \"Dolor unde cumque minus beatae fugiat. Quia autem nulla ratione ratione.\",\n                    \"min_salary\": 1503000,\n                    \"max_salary\": 1917000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 10,\n                    \"name\": \"Miss Liza Rippin V\",\n                    \"email\": \"isom16@example.net\",\n                    \"salary\": 2302000,\n                    \"position_id\": 8,\n                    \"manager_id\": 2,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2022-09-28T00:00:00.000000Z\",\n                    \"phone\": \"+1-480-464-7340\",\n                    \"address\": \"3674 Darrell Union Suite 331\\nCortneybury, KY 30938-5412\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2024-12-03T00:15:35.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 60,\n                \"name\": \"Vada Larkin\",\n                \"email\": \"adouglas@example.com\",\n                \"salary\": 1646000,\n                \"position_id\": 1,\n                \"manager_id\": 28,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-04-27T00:00:00.000000Z\",\n                \"phone\": \"854.981.8973\",\n                \"address\": \"6953 Thompson Tunnel\\nEllenbury, VA 54236\",\n                \"status\": \"inactive\",\n                \"last_salary_change\": \"2024-11-14T03:06:47.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 1,\n                    \"title\": \"Central Office Operator\",\n                    \"description\": \"Repudiandae atque iure sed.\",\n                    \"min_salary\": 2065000,\n                    \"max_salary\": 2709000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 28,\n                    \"name\": \"Brooke Lowe III\",\n                    \"email\": \"francisco.blanda@example.com\",\n                    \"salary\": 1040000,\n                    \"position_id\": 4,\n                    \"manager_id\": 5,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2023-10-21T00:00:00.000000Z\",\n                    \"phone\": \"+17436098125\",\n                    \"address\": \"549 Moshe Inlet Suite 981\\nPort Cortneystad, TN 39245-9202\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2024-11-14T03:42:26.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 61,\n                \"name\": \"Aleen Gerhold\",\n                \"email\": \"boehm.muhammad@example.org\",\n                \"salary\": 752000,\n                \"position_id\": 16,\n                \"manager_id\": 16,\n                \"is_founder\": false,\n                \"hire_date\": \"2024-07-10T00:00:00.000000Z\",\n                \"phone\": \"706.300.6934\",\n                \"address\": \"9884 Ortiz Spurs\\nAbbeybury, OR 83081\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-09-15T03:03:55.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 16,\n                    \"title\": \"Decorator\",\n                    \"description\": \"Iusto qui atque deleniti et.\",\n                    \"min_salary\": 922000,\n                    \"max_salary\": 1576000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 16,\n                    \"name\": \"Valentina Tillman DVM\",\n                    \"email\": \"shields.melvina@example.org\",\n                    \"salary\": 2147000,\n                    \"position_id\": 6,\n                    \"manager_id\": 4,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2024-04-05T00:00:00.000000Z\",\n                    \"phone\": \"1-903-561-6860\",\n                    \"address\": \"2114 Dejah Flat Apt. 099\\nNorth Tyrelberg, LA 15181\",\n                    \"status\": \"inactive\",\n                    \"last_salary_change\": \"2025-01-16T05:48:51.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 7,\n                \"name\": \"Llewellyn Haag\",\n                \"email\": \"zulauf.arvel@example.net\",\n                \"salary\": 1279000,\n                \"position_id\": 20,\n                \"manager_id\": 6,\n                \"is_founder\": false,\n                \"hire_date\": \"2024-02-22T00:00:00.000000Z\",\n                \"phone\": \"(775) 498-0184\",\n                \"address\": \"496 Brenda Shoal\\nSouth Grayson, DE 72488-9371\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-08-14T15:23:23.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 20,\n                    \"title\": \"Business Teacher\",\n                    \"description\": \"Quam ratione deserunt explicabo non suscipit eaque porro. Quia unde harum laborum porro ducimus ea.\",\n                    \"min_salary\": 2305000,\n                    \"max_salary\": 2506000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 6,\n                    \"name\": \"Manager est\",\n                    \"email\": \"myriam.kilback@example.org\",\n                    \"salary\": 1708000,\n                    \"position_id\": 23,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2024-08-10T00:00:00.000000Z\",\n                    \"phone\": \"+1-574-256-8283\",\n                    \"address\": \"24737 Krajcik Drive Suite 530\\nKozeymouth, ME 59175-0627\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-04-11T12:16:32.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 13,\n                \"name\": \"Dr. Carleton Collins Sr.\",\n                \"email\": \"kerluke.georgianna@example.org\",\n                \"salary\": 1317000,\n                \"position_id\": 17,\n                \"manager_id\": 5,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-08-21T00:00:00.000000Z\",\n                \"phone\": \"(305) 542-0092\",\n                \"address\": \"805 Fisher Route\\nLake Chaddview, AZ 70014-5925\",\n                \"status\": \"inactive\",\n                \"last_salary_change\": \"2024-11-24T03:11:49.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 17,\n                    \"title\": \"Electric Motor Repairer\",\n                    \"description\": \"Nulla dolores perferendis eum sint.\",\n                    \"min_salary\": 1717000,\n                    \"max_salary\": 1926000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 5,\n                    \"name\": \"Manager aut\",\n                    \"email\": \"hallie.moen@example.org\",\n                    \"salary\": 1955000,\n                    \"position_id\": 9,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2020-12-14T00:00:00.000000Z\",\n                    \"phone\": \"+1-360-647-5351\",\n                    \"address\": \"498 Rau Vista\\nSouth Juniorborough, NE 76755-9479\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-01-25T13:10:43.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 14,\n                \"name\": \"Bartholome Senger\",\n                \"email\": \"xgibson@example.org\",\n                \"salary\": 2260000,\n                \"position_id\": 9,\n                \"manager_id\": 1,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-03-29T00:00:00.000000Z\",\n                \"phone\": \"+1 (559) 875-6941\",\n                \"address\": \"727 Zakary Ferry Apt. 882\\nEast Calebland, MN 02553-6703\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2024-11-03T06:20:22.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 9,\n                    \"title\": \"Mechanical Engineering Technician\",\n                    \"description\": \"Dolor unde cumque minus beatae fugiat. Quia autem nulla ratione ratione.\",\n                    \"min_salary\": 1503000,\n                    \"max_salary\": 1917000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 1,\n                    \"name\": \"Founder Employee\",\n                    \"email\": \"elfrieda.marvin@example.com\",\n                    \"salary\": 3913000,\n                    \"position_id\": 24,\n                    \"manager_id\": null,\n                    \"is_founder\": true,\n                    \"hire_date\": \"2018-02-05T00:00:00.000000Z\",\n                    \"phone\": \"1-231-699-4050\",\n                    \"address\": \"390 Boyd Spurs Suite 454\\nLake Payton, IL 29855-9993\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2024-11-29T20:31:55.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 15,\n                \"name\": \"Stella Haag\",\n                \"email\": \"kara.runte@example.com\",\n                \"salary\": 625000,\n                \"position_id\": 14,\n                \"manager_id\": 3,\n                \"is_founder\": false,\n                \"hire_date\": \"2023-11-02T00:00:00.000000Z\",\n                \"phone\": \"+1-251-505-4845\",\n                \"address\": \"807 Rahul Estate Apt. 542\\nSouth Clairefurt, OH 85629\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2024-12-09T13:47:42.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 14,\n                    \"title\": \"Parking Enforcement Worker\",\n                    \"description\": \"Excepturi eos sit exercitationem quidem enim quia rem.\",\n                    \"min_salary\": 852000,\n                    \"max_salary\": 1351000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 3,\n                    \"name\": \"Manager nihil\",\n                    \"email\": \"mwolff@example.com\",\n                    \"salary\": 1586000,\n                    \"position_id\": 11,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2023-10-06T00:00:00.000000Z\",\n                    \"phone\": \"(585) 721-8351\",\n                    \"address\": \"6993 Hagenes Knolls Apt. 066\\nPort Arianna, AR 71221\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-02-25T07:16:36.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 12,\n                \"name\": \"Prof. Luther McClure\",\n                \"email\": \"kiana39@example.org\",\n                \"salary\": 1973000,\n                \"position_id\": 7,\n                \"manager_id\": 3,\n                \"is_founder\": false,\n                \"hire_date\": \"2023-03-09T00:00:00.000000Z\",\n                \"phone\": \"+1-669-786-7891\",\n                \"address\": \"75591 Ruecker Common\\nEast Katarinaborough, IN 46716\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-07-07T10:55:44.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 7,\n                    \"title\": \"Recreation Worker\",\n                    \"description\": \"Aut temporibus et et maxime neque.\",\n                    \"min_salary\": 2465000,\n                    \"max_salary\": 3166000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 3,\n                    \"name\": \"Manager nihil\",\n                    \"email\": \"mwolff@example.com\",\n                    \"salary\": 1586000,\n                    \"position_id\": 11,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2023-10-06T00:00:00.000000Z\",\n                    \"phone\": \"(585) 721-8351\",\n                    \"address\": \"6993 Hagenes Knolls Apt. 066\\nPort Arianna, AR 71221\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-02-25T07:16:36.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            }\n        ],\n        \"first_page_url\": \"http://hr-management-api.test/api/v1/employees?page=1\",\n        \"from\": 1,\n        \"last_page\": 5,\n        \"last_page_url\": \"http://hr-management-api.test/api/v1/employees?page=5\",\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employees?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employees?page=2\",\n                \"label\": \"2\",\n                \"page\": 2,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employees?page=3\",\n                \"label\": \"3\",\n                \"page\": 3,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employees?page=4\",\n                \"label\": \"4\",\n                \"page\": 4,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employees?page=5\",\n                \"label\": \"5\",\n                \"page\": 5,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employees?page=2\",\n                \"label\": \"Next &raquo;\",\n                \"page\": 2,\n                \"active\": false\n            }\n        ],\n        \"next_page_url\": \"http://hr-management-api.test/api/v1/employees?page=2\",\n        \"path\": \"http://hr-management-api.test/api/v1/employees\",\n        \"per_page\": 15,\n        \"prev_page_url\": null,\n        \"to\": 15,\n        \"total\": 66\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Alice Johnson\",\r\n    \"email\": \"alice.johnsson@company.com\",\r\n    \"salary\": 1200000,\r\n    \"position_id\": 1,\r\n    \"manager_id\": 2,\r\n    // \"is_founder\": true,\r\n    \"hire_date\": \"2024-01-15\",\r\n    \"phone\": \"+1-555-0123\",\r\n    \"address\": \"123 Oak Street, San Francisco, CA 94102\",\r\n    \"status\": \"active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Alice Johnson\",\r\n    \"email\": \"alice.johnsson@company.com\",\r\n    \"salary\": 1200000,\r\n    \"position_id\": 1,\r\n    \"manager_id\": 2,\r\n    // \"is_founder\": true,\r\n    \"hire_date\": \"2024-01-15\",\r\n    \"phone\": \"+1-555-0123\",\r\n    \"address\": \"123 Oak Street, San Francisco, CA 94102\",\r\n    \"status\": \"active\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/employees",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:25:10 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "8"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"name\": \"Alice Johnson\",\n        \"email\": \"alice.johnsson@company.com\",\n        \"salary\": 1200000,\n        \"position_id\": 1,\n        \"manager_id\": 2,\n        \"hire_date\": \"2024-01-15T00:00:00.000000Z\",\n        \"phone\": \"+1-555-0123\",\n        \"address\": \"123 Oak Street, San Francisco, CA 94102\",\n        \"status\": \"active\",\n        \"last_salary_change\": \"2025-09-25T07:25:10.000000Z\",\n        \"updated_at\": \"2025-09-25T07:25:10.000000Z\",\n        \"created_at\": \"2025-09-25T07:25:10.000000Z\",\n        \"id\": 67,\n        \"position\": {\n            \"id\": 1,\n            \"title\": \"Central Office Operator\",\n            \"description\": \"Repudiandae atque iure sed.\",\n            \"min_salary\": 2065000,\n            \"max_salary\": 2709000,\n            \"is_active\": true,\n            \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n        },\n        \"manager\": {\n            \"id\": 2,\n            \"name\": \"Manager excepturi\",\n            \"email\": \"angelo96@example.org\",\n            \"salary\": 2314000,\n            \"position_id\": 17,\n            \"manager_id\": 1,\n            \"is_founder\": false,\n            \"hire_date\": \"2021-09-28T00:00:00.000000Z\",\n            \"phone\": \"1-864-661-7050\",\n            \"address\": \"227 Rosenbaum Lock\\nLorenzaport, NE 62164-7171\",\n            \"status\": \"active\",\n            \"last_salary_change\": \"2025-07-10T17:13:43.000000Z\",\n            \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"deleted_at\": null\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Show Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/employees/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees",
+										"{{id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:25:42 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "6"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": 3,\n        \"name\": \"Manager nihil\",\n        \"email\": \"mwolff@example.com\",\n        \"salary\": 1586000,\n        \"position_id\": 11,\n        \"manager_id\": 1,\n        \"is_founder\": false,\n        \"hire_date\": \"2023-10-06T00:00:00.000000Z\",\n        \"phone\": \"(585) 721-8351\",\n        \"address\": \"6993 Hagenes Knolls Apt. 066\\nPort Arianna, AR 71221\",\n        \"status\": \"active\",\n        \"last_salary_change\": \"2025-02-25T07:16:36.000000Z\",\n        \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n        \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n        \"deleted_at\": null,\n        \"position\": {\n            \"id\": 11,\n            \"title\": \"Shoe and Leather Repairer\",\n            \"description\": \"Fuga molestiae quibusdam nisi distinctio commodi sed.\",\n            \"min_salary\": 2284000,\n            \"max_salary\": 2864000,\n            \"is_active\": true,\n            \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n        },\n        \"manager\": {\n            \"id\": 1,\n            \"name\": \"Founder Employee\",\n            \"email\": \"elfrieda.marvin@example.com\",\n            \"salary\": 3913000,\n            \"position_id\": 24,\n            \"manager_id\": null,\n            \"is_founder\": true,\n            \"hire_date\": \"2018-02-05T00:00:00.000000Z\",\n            \"phone\": \"1-231-699-4050\",\n            \"address\": \"390 Boyd Spurs Suite 454\\nLake Payton, IL 29855-9993\",\n            \"status\": \"active\",\n            \"last_salary_change\": \"2024-11-29T20:31:55.000000Z\",\n            \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"deleted_at\": null\n        },\n        \"subordinates\": [\n            {\n                \"id\": 11,\n                \"name\": \"Deangelo Witting\",\n                \"email\": \"jimmy.little@example.net\",\n                \"salary\": 1232000,\n                \"position_id\": 1,\n                \"manager_id\": 3,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-06-14T00:00:00.000000Z\",\n                \"phone\": \"+1 (223) 642-5614\",\n                \"address\": \"7345 Upton Key Apt. 595\\nSchroederfurt, OR 22358\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-01-24T04:14:45.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 12,\n                \"name\": \"Prof. Luther McClure\",\n                \"email\": \"kiana39@example.org\",\n                \"salary\": 1973000,\n                \"position_id\": 7,\n                \"manager_id\": 3,\n                \"is_founder\": false,\n                \"hire_date\": \"2023-03-09T00:00:00.000000Z\",\n                \"phone\": \"+1-669-786-7891\",\n                \"address\": \"75591 Ruecker Common\\nEast Katarinaborough, IN 46716\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-07-07T10:55:44.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 15,\n                \"name\": \"Stella Haag\",\n                \"email\": \"kara.runte@example.com\",\n                \"salary\": 625000,\n                \"position_id\": 14,\n                \"manager_id\": 3,\n                \"is_founder\": false,\n                \"hire_date\": \"2023-11-02T00:00:00.000000Z\",\n                \"phone\": \"+1-251-505-4845\",\n                \"address\": \"807 Rahul Estate Apt. 542\\nSouth Clairefurt, OH 85629\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2024-12-09T13:47:42.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 30,\n                \"name\": \"Carter Strosin\",\n                \"email\": \"amalia32@example.net\",\n                \"salary\": 660000,\n                \"position_id\": 15,\n                \"manager_id\": 3,\n                \"is_founder\": false,\n                \"hire_date\": \"2024-05-14T00:00:00.000000Z\",\n                \"phone\": \"+1 (240) 951-2243\",\n                \"address\": \"193 Lueilwitz Fields Apt. 484\\nEast Doug, KS 79558-3609\",\n                \"status\": \"inactive\",\n                \"last_salary_change\": \"2025-05-30T12:39:50.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Name Updated\"\r\n    // \"email\": \"john.smith.updated@company.com\",\r\n    // \"salary\": 8500200,\r\n    // \"position_id\": 3,\r\n    // \"manager_id\": 2,\r\n    // \"is_founder\": true,\r\n    // \"phone\": \"+1-555-0123\",\r\n    // \"address\": \"123 Main Street, New York, NY 10001\",\r\n    // \"status\": \"active\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/employees/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Name Updated\"\r\n    // \"email\": \"john.smith.updated@company.com\",\r\n    // \"salary\": 8500200,\r\n    // \"position_id\": 3,\r\n    // \"manager_id\": 2,\r\n    // \"is_founder\": true,\r\n    // \"phone\": \"+1-555-0123\",\r\n    // \"address\": \"123 Main Street, New York, NY 10001\",\r\n    // \"status\": \"active\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/employees/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees",
+										"{{id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:27:17 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "9"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Employee updated successfully\",\n    \"data\": {\n        \"id\": 56,\n        \"name\": \"Name Updated\",\n        \"email\": \"qfisher@example.org\",\n        \"salary\": 2090000,\n        \"position_id\": 5,\n        \"manager_id\": 1,\n        \"is_founder\": false,\n        \"hire_date\": \"2025-01-10T00:00:00.000000Z\",\n        \"phone\": \"+1.848.522.1798\",\n        \"address\": \"7936 Doug Plaza Apt. 298\\nStarkfort, VA 14090\",\n        \"status\": \"active\",\n        \"last_salary_change\": \"2025-01-10T22:24:52.000000Z\",\n        \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n        \"updated_at\": \"2025-09-25T07:27:17.000000Z\",\n        \"deleted_at\": null,\n        \"position\": {\n            \"id\": 5,\n            \"title\": \"Outdoor Power Equipment Mechanic\",\n            \"description\": \"Et qui est aut voluptas tenetur quibusdam ea qui.\",\n            \"min_salary\": 962000,\n            \"max_salary\": 1196000,\n            \"is_active\": true,\n            \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n        },\n        \"manager\": {\n            \"id\": 1,\n            \"name\": \"Founder Employee\",\n            \"email\": \"elfrieda.marvin@example.com\",\n            \"salary\": 3913000,\n            \"position_id\": 24,\n            \"manager_id\": null,\n            \"is_founder\": true,\n            \"hire_date\": \"2018-02-05T00:00:00.000000Z\",\n            \"phone\": \"1-231-699-4050\",\n            \"address\": \"390 Boyd Spurs Suite 454\\nLake Payton, IL 29855-9993\",\n            \"status\": \"active\",\n            \"last_salary_change\": \"2024-11-29T20:31:55.000000Z\",\n            \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n            \"deleted_at\": null\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/employees/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees",
+										"{{id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:28:06 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "8"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Employee deleted successfully\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Employee Hierarchy",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees/{{id}}/hierarchy",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"{{id}}",
+								"hierarchy"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/employees/{{id}}/hierarchy",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees",
+										"{{id}}",
+										"hierarchy"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:28:36 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "9"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        \"Founder Employee\",\n        \"Manager excepturi\"\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Employee Hierarchy With Salaries",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees/{{id}}/hierarchy-with-salaries",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"{{id}}",
+								"hierarchy-with-salaries"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/employees/{{id}}/hierarchy-with-salaries",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees",
+										"{{id}}",
+										"hierarchy-with-salaries"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:29:02 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "8"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"Founder Employee\": 3913000,\n        \"Manager excepturi\": 2314000\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Employees Without Recent Salary Change",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees/without-salary-change/{{months}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"without-salary-change",
+								"{{months}}"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "15",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/employees/without-salary-change/{{months}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employees",
+										"without-salary-change",
+										"{{months}}"
+									],
+									"query": [
+										{
+											"key": "per_page",
+											"value": "15",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:29:53 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "7"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"current_page\": 1,\n        \"data\": [\n            {\n                \"id\": 34,\n                \"name\": \"Prof. Miguel West Sr.\",\n                \"email\": \"alisa.goodwin@example.com\",\n                \"salary\": 858000,\n                \"position_id\": 3,\n                \"manager_id\": 2,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-03-05T00:00:00.000000Z\",\n                \"phone\": \"+1 (580) 572-1049\",\n                \"address\": \"7370 Lorenz Ports\\nNew Dayne, HI 54418\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2024-09-28T10:20:56.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 3,\n                    \"title\": \"Infantry\",\n                    \"description\": \"Quod qui qui error rem.\",\n                    \"min_salary\": 1651000,\n                    \"max_salary\": 2100000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 2,\n                    \"name\": \"Manager excepturi\",\n                    \"email\": \"angelo96@example.org\",\n                    \"salary\": 2314000,\n                    \"position_id\": 17,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2021-09-28T00:00:00.000000Z\",\n                    \"phone\": \"1-864-661-7050\",\n                    \"address\": \"227 Rosenbaum Lock\\nLorenzaport, NE 62164-7171\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-07-10T17:13:43.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 35,\n                \"name\": \"Raleigh Brakus\",\n                \"email\": \"waelchi.gordon@example.com\",\n                \"salary\": 1882000,\n                \"position_id\": 5,\n                \"manager_id\": 2,\n                \"is_founder\": false,\n                \"hire_date\": \"2023-05-24T00:00:00.000000Z\",\n                \"phone\": \"662.315.9539\",\n                \"address\": \"5318 Kraig Mall Suite 011\\nKhalidbury, AZ 51591\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2024-09-29T16:20:48.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 5,\n                    \"title\": \"Outdoor Power Equipment Mechanic\",\n                    \"description\": \"Et qui est aut voluptas tenetur quibusdam ea qui.\",\n                    \"min_salary\": 962000,\n                    \"max_salary\": 1196000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 2,\n                    \"name\": \"Manager excepturi\",\n                    \"email\": \"angelo96@example.org\",\n                    \"salary\": 2314000,\n                    \"position_id\": 17,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2021-09-28T00:00:00.000000Z\",\n                    \"phone\": \"1-864-661-7050\",\n                    \"address\": \"227 Rosenbaum Lock\\nLorenzaport, NE 62164-7171\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-07-10T17:13:43.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 36,\n                \"name\": \"Ms. Myah Erdman\",\n                \"email\": \"mann.kelly@example.com\",\n                \"salary\": 1941000,\n                \"position_id\": 14,\n                \"manager_id\": 4,\n                \"is_founder\": false,\n                \"hire_date\": \"2024-10-07T00:00:00.000000Z\",\n                \"phone\": \"980-794-2973\",\n                \"address\": \"8069 Rose Streets Apt. 442\\nSchoenfort, MI 67092\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2024-10-09T21:35:26.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 14,\n                    \"title\": \"Parking Enforcement Worker\",\n                    \"description\": \"Excepturi eos sit exercitationem quidem enim quia rem.\",\n                    \"min_salary\": 852000,\n                    \"max_salary\": 1351000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 4,\n                    \"name\": \"Manager molestias\",\n                    \"email\": \"louisa66@example.net\",\n                    \"salary\": 2102000,\n                    \"position_id\": 23,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2021-03-23T00:00:00.000000Z\",\n                    \"phone\": \"+1 (279) 491-3772\",\n                    \"address\": \"681 Laurianne Street\\nLake Montana, LA 42008\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-04-07T11:58:23.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            },\n            {\n                \"id\": 37,\n                \"name\": \"Mr. Scot Orn\",\n                \"email\": \"dietrich.broderick@example.com\",\n                \"salary\": 1803000,\n                \"position_id\": 6,\n                \"manager_id\": 5,\n                \"is_founder\": false,\n                \"hire_date\": \"2023-06-21T00:00:00.000000Z\",\n                \"phone\": \"+19146594230\",\n                \"address\": \"4292 Gia Wall Suite 449\\nNorth Francisca, MS 36525\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2024-10-13T06:08:16.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null,\n                \"position\": {\n                    \"id\": 6,\n                    \"title\": \"Patternmaker\",\n                    \"description\": \"Nulla consectetur qui officiis dolores commodi non harum. Commodi qui assumenda unde et id ipsa.\",\n                    \"min_salary\": 1219000,\n                    \"max_salary\": 1865000,\n                    \"is_active\": true,\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\"\n                },\n                \"manager\": {\n                    \"id\": 5,\n                    \"name\": \"Manager aut\",\n                    \"email\": \"hallie.moen@example.org\",\n                    \"salary\": 1955000,\n                    \"position_id\": 9,\n                    \"manager_id\": 1,\n                    \"is_founder\": false,\n                    \"hire_date\": \"2020-12-14T00:00:00.000000Z\",\n                    \"phone\": \"+1-360-647-5351\",\n                    \"address\": \"498 Rau Vista\\nSouth Juniorborough, NE 76755-9479\",\n                    \"status\": \"active\",\n                    \"last_salary_change\": \"2025-01-25T13:10:43.000000Z\",\n                    \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                    \"deleted_at\": null\n                }\n            }\n        ],\n        \"first_page_url\": \"http://hr-management-api.test/api/v1/employees/without-salary-change/11?page=1\",\n        \"from\": 1,\n        \"last_page\": 1,\n        \"last_page_url\": \"http://hr-management-api.test/api/v1/employees/without-salary-change/11?page=1\",\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employees/without-salary-change/11?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": null,\n                \"label\": \"Next &raquo;\",\n                \"page\": null,\n                \"active\": false\n            }\n        ],\n        \"next_page_url\": null,\n        \"path\": \"http://hr-management-api.test/api/v1/employees/without-salary-change/11\",\n        \"per_page\": 15,\n        \"prev_page_url\": null,\n        \"to\": 4,\n        \"total\": 4\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Export to CSV",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees/export/csv",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"export",
+								"csv"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employee Positions",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employee-positions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employee-positions"
+							],
+							"query": [
+								{
+									"key": "per_page",
+									"value": "10",
+									"description": "Number of positions per page",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "List Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/employee-positions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employee-positions"
+									],
+									"query": [
+										{
+											"key": "per_page",
+											"value": "10",
+											"description": "Number of positions per page",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:33:56 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "8"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"current_page\": 1,\n        \"data\": [\n            {\n                \"id\": 1,\n                \"title\": \"Central Office Operator\",\n                \"description\": \"Repudiandae atque iure sed.\",\n                \"min_salary\": 2065000,\n                \"max_salary\": 2709000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 7\n            },\n            {\n                \"id\": 2,\n                \"title\": \"Airfield Operations Specialist\",\n                \"description\": \"Qui fugit ducimus voluptas tempora.\",\n                \"min_salary\": 1153000,\n                \"max_salary\": 1846000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 2\n            },\n            {\n                \"id\": 3,\n                \"title\": \"Infantry\",\n                \"description\": \"Quod qui qui error rem.\",\n                \"min_salary\": 1651000,\n                \"max_salary\": 2100000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 3\n            },\n            {\n                \"id\": 4,\n                \"title\": \"Horticultural Worker\",\n                \"description\": \"Est sed autem id consequatur unde ut sed. Praesentium eaque a alias optio deleniti aut.\",\n                \"min_salary\": 659000,\n                \"max_salary\": 1005000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 1\n            },\n            {\n                \"id\": 5,\n                \"title\": \"Outdoor Power Equipment Mechanic\",\n                \"description\": \"Et qui est aut voluptas tenetur quibusdam ea qui.\",\n                \"min_salary\": 962000,\n                \"max_salary\": 1196000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 5\n            },\n            {\n                \"id\": 6,\n                \"title\": \"Patternmaker\",\n                \"description\": \"Nulla consectetur qui officiis dolores commodi non harum. Commodi qui assumenda unde et id ipsa.\",\n                \"min_salary\": 1219000,\n                \"max_salary\": 1865000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 4\n            },\n            {\n                \"id\": 7,\n                \"title\": \"Recreation Worker\",\n                \"description\": \"Aut temporibus et et maxime neque.\",\n                \"min_salary\": 2465000,\n                \"max_salary\": 3166000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 2\n            },\n            {\n                \"id\": 8,\n                \"title\": \"Supervisor of Police\",\n                \"description\": \"Veritatis et perspiciatis quo cum molestiae.\",\n                \"min_salary\": 1499000,\n                \"max_salary\": 2153000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 3\n            },\n            {\n                \"id\": 9,\n                \"title\": \"Mechanical Engineering Technician\",\n                \"description\": \"Dolor unde cumque minus beatae fugiat. Quia autem nulla ratione ratione.\",\n                \"min_salary\": 1503000,\n                \"max_salary\": 1917000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 6\n            },\n            {\n                \"id\": 10,\n                \"title\": \"Database Manager\",\n                \"description\": \"Molestias optio ducimus odit quisquam mollitia repudiandae. Doloremque non quo nihil rerum aperiam at.\",\n                \"min_salary\": 1226000,\n                \"max_salary\": 1913000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 1\n            },\n            {\n                \"id\": 11,\n                \"title\": \"Shoe and Leather Repairer\",\n                \"description\": \"Fuga molestiae quibusdam nisi distinctio commodi sed.\",\n                \"min_salary\": 2284000,\n                \"max_salary\": 2864000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 2\n            },\n            {\n                \"id\": 12,\n                \"title\": \"Pharmacy Technician\",\n                \"description\": \"Veritatis vero eos blanditiis sunt rerum voluptas exercitationem. Delectus quia odio veritatis beatae id cum illo.\",\n                \"min_salary\": 1881000,\n                \"max_salary\": 2339000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 0\n            },\n            {\n                \"id\": 13,\n                \"title\": \"Archeologist\",\n                \"description\": \"Omnis quo odit voluptas corporis minus aut sint. Quam asperiores ut aut vitae aperiam maiores eligendi.\",\n                \"min_salary\": 1165000,\n                \"max_salary\": 1532000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 3\n            },\n            {\n                \"id\": 14,\n                \"title\": \"Parking Enforcement Worker\",\n                \"description\": \"Excepturi eos sit exercitationem quidem enim quia rem.\",\n                \"min_salary\": 852000,\n                \"max_salary\": 1351000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 4\n            },\n            {\n                \"id\": 15,\n                \"title\": \"Loan Counselor\",\n                \"description\": \"Numquam quo alias rem expedita temporibus aut. Omnis tenetur voluptas nulla officia vitae qui.\",\n                \"min_salary\": 1102000,\n                \"max_salary\": 1387000,\n                \"is_active\": true,\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"employees_count\": 2\n            }\n        ],\n        \"first_page_url\": \"http://hr-management-api.test/api/v1/employee-positions?page=1\",\n        \"from\": 1,\n        \"last_page\": 2,\n        \"last_page_url\": \"http://hr-management-api.test/api/v1/employee-positions?page=2\",\n        \"links\": [\n            {\n                \"url\": null,\n                \"label\": \"&laquo; Previous\",\n                \"page\": null,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employee-positions?page=1\",\n                \"label\": \"1\",\n                \"page\": 1,\n                \"active\": true\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employee-positions?page=2\",\n                \"label\": \"2\",\n                \"page\": 2,\n                \"active\": false\n            },\n            {\n                \"url\": \"http://hr-management-api.test/api/v1/employee-positions?page=2\",\n                \"label\": \"Next &raquo;\",\n                \"page\": 2,\n                \"active\": false\n            }\n        ],\n        \"next_page_url\": \"http://hr-management-api.test/api/v1/employee-positions?page=2\",\n        \"path\": \"http://hr-management-api.test/api/v1/employee-positions\",\n        \"per_page\": 15,\n        \"prev_page_url\": null,\n        \"to\": 15,\n        \"total\": 25\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Software Engineer\",\r\n  \"description\": \"Responsible for developing and maintaining software applications.\",\r\n  \"min_salary\": 1200000,\r\n  \"max_salary\": 2200000,\r\n  \"is_active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/employee-positions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employee-positions"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Create Success",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"Software Engineer\",\r\n  \"description\": \"Responsible for developing and maintaining software applications.\",\r\n  \"min_salary\": 1200000,\r\n  \"max_salary\": 2200000,\r\n  \"is_active\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/employee-positions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employee-positions"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:37:34 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "8"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Position created successfully\",\n    \"data\": {\n        \"title\": \"Software Engineer\",\n        \"description\": \"Responsible for developing and maintaining software applications.\",\n        \"min_salary\": 1200000,\n        \"max_salary\": 2200000,\n        \"is_active\": true,\n        \"updated_at\": \"2025-09-25T07:37:34.000000Z\",\n        \"created_at\": \"2025-09-25T07:37:34.000000Z\",\n        \"id\": 27\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Show",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employee-positions/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employee-positions",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Show Success",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/employee-positions/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employee-positions",
+										"{{id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:35:05 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "9"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": 1,\n        \"title\": \"Central Office Operator\",\n        \"description\": \"Repudiandae atque iure sed.\",\n        \"min_salary\": 2065000,\n        \"max_salary\": 2709000,\n        \"is_active\": true,\n        \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n        \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n        \"employees\": [\n            {\n                \"id\": 9,\n                \"name\": \"Darrell Wuckert\",\n                \"email\": \"ystoltenberg@example.com\",\n                \"salary\": 1130000,\n                \"position_id\": 1,\n                \"manager_id\": 2,\n                \"is_founder\": false,\n                \"hire_date\": \"2023-06-23T00:00:00.000000Z\",\n                \"phone\": \"+18648824224\",\n                \"address\": \"153 Clay Forge\\nNew Garrettland, SC 34093-6950\",\n                \"status\": \"inactive\",\n                \"last_salary_change\": \"2025-08-22T03:05:16.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 11,\n                \"name\": \"Deangelo Witting\",\n                \"email\": \"jimmy.little@example.net\",\n                \"salary\": 1232000,\n                \"position_id\": 1,\n                \"manager_id\": 3,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-06-14T00:00:00.000000Z\",\n                \"phone\": \"+1 (223) 642-5614\",\n                \"address\": \"7345 Upton Key Apt. 595\\nSchroederfurt, OR 22358\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-01-24T04:14:45.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 29,\n                \"name\": \"Prof. Dell Orn IV\",\n                \"email\": \"trever.murray@example.org\",\n                \"salary\": 1530000,\n                \"position_id\": 1,\n                \"manager_id\": 2,\n                \"is_founder\": false,\n                \"hire_date\": \"2023-04-07T00:00:00.000000Z\",\n                \"phone\": \"+1.380.612.2014\",\n                \"address\": \"606 Missouri Crest Apt. 012\\nEast Olaville, UT 58663\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-05-26T13:59:28.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 32,\n                \"name\": \"Prof. Bret Jaskolski\",\n                \"email\": \"brennan61@example.net\",\n                \"salary\": 2212000,\n                \"position_id\": 1,\n                \"manager_id\": 4,\n                \"is_founder\": false,\n                \"hire_date\": \"2022-10-23T00:00:00.000000Z\",\n                \"phone\": \"+1 (662) 382-0745\",\n                \"address\": \"405 Ernser Station\\nEast Pablo, IN 81618\",\n                \"status\": \"inactive\",\n                \"last_salary_change\": \"2025-01-20T11:50:23.000000Z\",\n                \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"updated_at\": \"2025-09-25T07:01:50.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 60,\n                \"name\": \"Vada Larkin\",\n                \"email\": \"adouglas@example.com\",\n                \"salary\": 1646000,\n                \"position_id\": 1,\n                \"manager_id\": 28,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-04-27T00:00:00.000000Z\",\n                \"phone\": \"854.981.8973\",\n                \"address\": \"6953 Thompson Tunnel\\nEllenbury, VA 54236\",\n                \"status\": \"inactive\",\n                \"last_salary_change\": \"2024-11-14T03:06:47.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 62,\n                \"name\": \"Ena Lockman\",\n                \"email\": \"modesta89@example.com\",\n                \"salary\": 1805000,\n                \"position_id\": 1,\n                \"manager_id\": 15,\n                \"is_founder\": false,\n                \"hire_date\": \"2025-03-04T00:00:00.000000Z\",\n                \"phone\": \"+1-929-261-7011\",\n                \"address\": \"18716 Gulgowski Manor Suite 015\\nLake Maevefurt, WA 66002-8697\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2024-12-20T23:23:43.000000Z\",\n                \"created_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"updated_at\": \"2025-09-25T07:03:30.000000Z\",\n                \"deleted_at\": null\n            },\n            {\n                \"id\": 67,\n                \"name\": \"Alice Johnson\",\n                \"email\": \"alice.johnsson@company.com\",\n                \"salary\": 1200000,\n                \"position_id\": 1,\n                \"manager_id\": 2,\n                \"is_founder\": false,\n                \"hire_date\": \"2024-01-15T00:00:00.000000Z\",\n                \"phone\": \"+1-555-0123\",\n                \"address\": \"123 Oak Street, San Francisco, CA 94102\",\n                \"status\": \"active\",\n                \"last_salary_change\": \"2025-09-25T07:25:10.000000Z\",\n                \"created_at\": \"2025-09-25T07:25:10.000000Z\",\n                \"updated_at\": \"2025-09-25T07:25:10.000000Z\",\n                \"deleted_at\": null\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Updated Position\"\r\n//   \"description\": \"Leads the software development team.\",\r\n//   \"level\": \"Lead\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/employee-positions/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employee-positions",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Update Success",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"title\": \"Updated Position\"\r\n//   \"description\": \"Leads the software development team.\",\r\n//   \"level\": \"Lead\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/employee-positions/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employee-positions",
+										"{{id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:36:57 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "9"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Position updated successfully\",\n    \"data\": {\n        \"id\": 22,\n        \"title\": \"Updated Position\",\n        \"description\": \"Eum id sit ullam et non. Omnis molestiae iusto dolor voluptas accusamus ipsa nihil itaque.\",\n        \"min_salary\": 1659000,\n        \"max_salary\": 2326000,\n        \"is_active\": true,\n        \"created_at\": \"2025-09-25T07:01:50.000000Z\",\n        \"updated_at\": \"2025-09-25T07:35:53.000000Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employee-positions/{{id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employee-positions",
+								"{{id}}"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Delete Success",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/employee-positions/{{id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"employee-positions",
+										"{{id}}"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.25.2"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Vary",
+									"value": "Accept-Encoding"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.4.12"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, private"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 25 Sep 2025 07:38:05 GMT"
+								},
+								{
+									"key": "X-RateLimit-Limit",
+									"value": "10"
+								},
+								{
+									"key": "X-RateLimit-Remaining",
+									"value": "9"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Encoding",
+									"value": "gzip"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Position deleted successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/health",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "Server",
+							"value": "nginx/1.25.2"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "Vary",
+							"value": "Accept-Encoding"
+						},
+						{
+							"key": "X-Powered-By",
+							"value": "PHP/8.4.12"
+						},
+						{
+							"key": "Cache-Control",
+							"value": "no-cache, private"
+						},
+						{
+							"key": "Date",
+							"value": "Thu, 25 Sep 2025 07:38:20 GMT"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "Content-Encoding",
+							"value": "gzip"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"status\": \"OK\",\n    \"message\": \"HR Management API is running\",\n    \"version\": \"v1.0.0\",\n    \"timestamp\": \"2025-09-25 07:38:20\"\n}"
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://farming-simulator.pstmn.io"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		}
+	]
+}

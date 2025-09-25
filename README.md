@@ -142,7 +142,7 @@ A complete database export with sample data is included at `database/dumps/hr_ma
 
 ## Documentation
 
-API documentation is available in the source code under `HR Management API`.
+API documentation is available in the source code under `docs/hr-management-api.postman_collection`.
 
 ## Testing
 
