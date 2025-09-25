@@ -20,7 +20,8 @@ class EmployeePositionController extends Controller
      */
     public function index(): JsonResponse
     {
-        $positions = $this->employeePositionService->getPaginated();
+        $perPage = request()->get('per_page', 15);
+        $positions = $this->employeePositionService->getPaginated($perPage);
 
         return response()->json([
             'data' => $positions
