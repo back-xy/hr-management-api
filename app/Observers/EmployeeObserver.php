@@ -7,6 +7,7 @@ use App\Models\EmployeeLog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Log;
+use App\Enums\EmployeeLogAction;
 
 class EmployeeObserver
 {
@@ -15,7 +16,7 @@ class EmployeeObserver
      */
     public function created(Employee $employee): void
     {
-        $this->logAction($employee, 'created', null, $employee->toArray());
+        $this->logAction($employee, EmployeeLogAction::CREATED->value, null, $employee->toArray());
     }
 
     /**
@@ -23,7 +24,7 @@ class EmployeeObserver
      */
     public function updated(Employee $employee): void
     {
-        $this->logAction($employee, 'updated', $employee->getOriginal(), $employee->getChanges());
+        $this->logAction($employee, EmployeeLogAction::UPDATED->value, $employee->getOriginal(), $employee->getChanges());
     }
 
     /**
@@ -31,7 +32,7 @@ class EmployeeObserver
      */
     public function deleted(Employee $employee): void
     {
-        $this->logAction($employee, 'deleted', $employee->toArray(), null);
+        $this->logAction($employee, EmployeeLogAction::DELETED->value, $employee->toArray(), null);
     }
 
     /**
