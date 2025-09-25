@@ -134,7 +134,7 @@ Start the queue worker (required for notifications):
 php artisan queue:work
 ```
 
-The API will be available at `http://localhost:8000`
+The API will be available at `http://localhost:8000/api/v1`
 
 ## Database
 
