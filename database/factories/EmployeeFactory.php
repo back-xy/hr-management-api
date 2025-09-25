@@ -26,7 +26,7 @@ class EmployeeFactory extends Factory
             'hire_date' => fake()->dateTimeBetween('-3 years', '-1 month'),
             'phone' => fake()->phoneNumber(),
             'address' => fake()->address(),
-            'status' => fake()->boolean(75) ? 'active' : 'inactive',
+            'status' => fake()->boolean(75) ? \App\Enums\EmployeeStatus::ACTIVE->value : \App\Enums\EmployeeStatus::INACTIVE->value,
             'last_salary_change' => fake()->dateTimeBetween('-12 months', '-1 week'),
         ];
     }

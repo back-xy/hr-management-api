@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\EmployeeStatus;
 
 class Employee extends Model
 {
@@ -30,6 +31,7 @@ class Employee extends Model
         'is_founder' => 'boolean',
         'hire_date' => 'date',
         'last_salary_change' => 'datetime',
+        'status' => EmployeeStatus::class,
     ];
 
     /**

@@ -4,6 +4,8 @@ namespace App\Http\Requests\Api\V1\Employee;
 
 use App\Rules\UniqueFounder;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\EmployeeStatus;
+use Illuminate\Validation\Rule;
 
 class StoreEmployeeRequest extends FormRequest
 {
@@ -27,7 +29,10 @@ class StoreEmployeeRequest extends FormRequest
             'hire_date' => 'required|date',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:500',
-            'status' => 'sometimes|in:active,inactive,terminated',
+            'status' => [
+                'sometimes',
+                Rule::in(EmployeeStatus::values()),
+            ],
         ];
     }
 }

@@ -4,6 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use App\Enums\EmployeeStatus;
 
 return new class extends Migration
 {
@@ -23,7 +24,7 @@ return new class extends Migration
             $table->date('hire_date');
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
-            $table->enum('status', ['active', 'inactive', 'terminated'])->default('active');
+            $table->enum('status', EmployeeStatus::values())->default(EmployeeStatus::ACTIVE->value);
             $table->timestamp('last_salary_change')->nullable();
             $table->timestamps();
             $table->softDeletes();

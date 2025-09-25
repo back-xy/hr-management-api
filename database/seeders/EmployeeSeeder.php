@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Employee;
 use App\Models\EmployeePosition;
+use App\Enums\EmployeeStatus;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -28,7 +29,7 @@ class EmployeeSeeder extends Seeder
             'manager_id' => null,
             'is_founder' => true,
             'hire_date' => fake()->dateTimeBetween('-10 years', '-5 years'),
-            'status' => 'active',
+            'status' => EmployeeStatus::ACTIVE->value,
         ]);
 
         // Create managers reporting to founder
@@ -38,7 +39,7 @@ class EmployeeSeeder extends Seeder
             'position_id' => fn() => fake()->randomElement($positionIds),
             'manager_id' => $founder->id,
             'hire_date' => fn() => fake()->dateTimeBetween('-5 years', '-1 year'),
-            'status' => 'active',
+            'status' => EmployeeStatus::ACTIVE->value,
         ]);
 
         $allManagers = $managers->push($founder);
