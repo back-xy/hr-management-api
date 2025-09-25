@@ -20,8 +20,8 @@ class EmployeeFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'salary' => fake()->numberBetween(600, 2500) * 1000, // 600K-2.5M IQD
-            'position_id' => null,
-            'manager_id' => null,
+            'position_id' => \App\Models\EmployeePosition::inRandomOrder()->first()?->id ?? 1,
+            'manager_id' => \App\Models\Employee::inRandomOrder()->first()?->id ?? 1,
             'is_founder' => false,
             'hire_date' => fake()->dateTimeBetween('-3 years', '-1 month'),
             'phone' => fake()->phoneNumber(),
