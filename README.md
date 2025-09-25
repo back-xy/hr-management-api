@@ -73,7 +73,7 @@ php artisan db:export-sql {--path=}
 # Export employees to JSON file with relationships
 php artisan employees:export-json {--path=}
 
-# Insert employee data using factories (with progress bar)
+# Seed employee data
 php artisan employees:insert {count=10}
 ```
 
