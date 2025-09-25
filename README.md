@@ -1,6 +1,6 @@
 # HR Management API
 
-A Laravel-based API for comprehensive Human Resources Management System with hierarchical employee structure, extensive logging, and data management commands.
+This project is a Laravel-based API for comprehensive Human Resources Management System with hierarchical employee structure, extensive logging, and data management.
 
 ## Features
 
@@ -55,6 +55,29 @@ A Laravel-based API for comprehensive Human Resources Management System with hie
 - `GET /employees/export/csv` - Export employees to CSV
 - `GET /employees/no-salary-change/{months}` - Get employees without salary changes
 
+## Artisan Commands
+
+### Log Management
+```bash
+# Delete old employee logs (older than specified months)
+php artisan logs:delete-old {months=1} {--dry-run} {--force}
+
+# Remove all log files from storage/logs directory
+php artisan logs:clear {--dry-run} {--force}
+```
+
+### Data Export/Import
+```bash
+# Export database to SQL file
+php artisan db:export-sql {--path=}
+
+# Export employees to JSON file with relationships
+php artisan employees:export-json {--path=}
+
+# Insert employee data using factories (with progress bar)
+php artisan employees:insert {count=10}
+```
+
 ## Setup Guide
 
 ### Prerequisites
@@ -106,10 +129,14 @@ php artisan serve
 
 The API will be available at `http://localhost:8000`
 
-## Testing
+## Database
 
-Not Implemented
+A complete database export with sample data is included at `database/dumps/hr_management_database.sql`.
 
 ## Documentation
 
 API documentation is available in the source code under `HR Management API`.
+
+## Testing
+
+Not Implemented
