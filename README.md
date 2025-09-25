@@ -134,7 +134,7 @@ Start the queue worker (required for notifications):
 php artisan queue:work
 ```
 
-The API will be available at `http://localhost:8000/api/v1`
+The API should now be available at `http://localhost:8000/api/v1`
 
 ## Database
 
@@ -142,7 +142,7 @@ A complete database export with sample data is included at `database/dumps/hr_ma
 
 ## Documentation
 
-API documentation is available in the source code under `docs/hr-management-api.postman_collection.json`.
+API documentation is available in the source code at `docs/hr-management-api.postman_collection.json`.
 
 ## Testing
 
