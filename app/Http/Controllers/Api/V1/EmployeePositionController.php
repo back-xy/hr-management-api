@@ -23,6 +23,7 @@ class EmployeePositionController extends Controller
         $perPage = request()->get('per_page', 15);
         $positions = $this->employeePositionService->getPaginated($perPage);
 
+        // using resources as a response would be better for larger projects
         return response()->json([
             'data' => $positions
         ]);

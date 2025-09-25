@@ -22,6 +22,7 @@ class AuthController extends Controller
     {
         $result = $this->authService->register($request->validated());
 
+        // using resources as a response would be better for larger projects
         return response()->json([
             'message' => 'User registered successfully',
             'data' => [

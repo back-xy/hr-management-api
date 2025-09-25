@@ -27,6 +27,7 @@ class EmployeeController extends Controller
             $request->getFilters()
         );
 
+        // using resources as a response would be better for larger projects
         return response()->json([
             'data' => $employees
         ]);
