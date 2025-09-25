@@ -17,6 +17,7 @@ This project is a Laravel-based API for comprehensive Human Resources Management
 - **Logging & Monitoring**:
   - Database logging for all employee operations
   - File logging with custom employee.log channel
+  - Mail logging for new employee and salary change notifications
   - Action tracking with user details
 - **Data Management Commands**:
   - Delete old logs with configurable timeframe
@@ -114,6 +115,8 @@ php artisan employees:insert {count=10}
    DB_PASSWORD=
    ```
 
+   **Note**: Mail is configured to log to files for testing purposes (`MAIL_MAILER=log`). Notifications will be logged to `storage/logs/mail.log`.
+
 5. Run migrations:
    ```bash
    php artisan migrate --seed
@@ -124,6 +127,11 @@ php artisan employees:insert {count=10}
 Start the development server:
 ```bash
 php artisan serve
+```
+
+Start the queue worker (required for notifications):
+```bash
+php artisan queue:work
 ```
 
 The API will be available at `http://localhost:8000`
