@@ -8,23 +8,9 @@ use Carbon\Carbon;
 
 class DeleteOldEmployeeLogs extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'logs:delete-old {months=1 : Number of months old} {--dry-run : Preview without deleting} {--force : Skip confirmation}';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Delete employee logs older than specified months';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $months = (int) $this->argument('months');

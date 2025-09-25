@@ -7,23 +7,10 @@ use Illuminate\Support\Facades\File;
 
 class RemoveAllLogFiles extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'logs:clear {--dry-run : Preview without deleting} {--force : Skip confirmation}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Remove all log files from storage/logs directory';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $dryRun = $this->option('dry-run');
